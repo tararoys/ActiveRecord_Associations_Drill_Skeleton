@@ -4,6 +4,8 @@ class CreateSamples < ActiveRecord::Migration
       table.integer :drinker_id
       table.integer :tea_id
       table.boolean :like
+
+      table.timestamps
     end
   end
 end

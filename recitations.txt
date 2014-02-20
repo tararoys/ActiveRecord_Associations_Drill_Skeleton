@@ -1,0 +1,71 @@
+1.9.3-p392 :001 > Drinker.new.teas.to_sql                                                                                                
+ => "SELECT \"teas\".* FROM \"teas\" INNER JOIN \"samples\" ON \"teas\".\"id\" = \"samples\".\"tea_id\" WHERE \"samples\".\"drinker_id\" 
+IS NULL" 
+1.9.3-p392 :002 > Drinker.first.teas
+D, [2014-02-20T13:52:02.097613 #28239] DEBUG -- :   Drinker Load (1.6ms)  SELECT "drinkers".* FROM "drinkers" LIMIT 1
+D, [2014-02-20T13:52:02.103592 #28239] DEBUG -- :   Tea Load (1.8ms)  SELECT "teas".* FROM "teas" INNER JOIN "samples" ON "teas"."id" = "
+samples"."tea_id" WHERE "samples"."drinker_id" = 1
+ => [#<Tea id: 1, name: "Forever Nuts", description: "Walnut Tea", created_at: "2014-02-20 13:39:32", updated_at: "2014-02-20 13:39:32">,
+ #<Tea id: 2, name: "Chocolate Rocket", description: "chocolately black tea", created_at: "2014-02-20 13:39:32", updated_at: "2014-02-20 
+13:39:32">] 
+1.9.3-p392 :003 > Drinker.first.teas
+D, [2014-02-20T13:56:31.443045 #28239] DEBUG -- :   Drinker Load (1.0ms)  SELECT "drinkers".* FROM "drinkers" LIMIT 1
+D, [2014-02-20T13:56:31.447281 #28239] DEBUG -- :   Tea Load (1.1ms)  SELECT "teas".* FROM "teas" INNER JOIN "samples" ON "teas"."id" = "
+samples"."tea_id" WHERE "samples"."drinker_id" = 1
+ => [#<Tea id: 1, name: "Forever Nuts", description: "Walnut Tea", created_at: "2014-02-20 13:39:32", updated_at: "2014-02-20 13:39:32">,
+ #<Tea id: 2, name: "Chocolate Rocket", description: "chocolately black tea", created_at: "2014-02-20 13:39:32", updated_at: "2014-02-20 
+13:39:32">] 
+1.9.3-p392 :004 > Drinker.first.teas << Tea.create(:name => "cool", :description => "awesome")
+D, [2014-02-20T13:57:17.654219 #28239] DEBUG -- :   Drinker Load (0.9ms)  SELECT "drinkers".* FROM "drinkers" LIMIT 1
+D, [2014-02-20T13:57:17.657071 #28239] DEBUG -- :    (0.5ms)  BEGIN
+D, [2014-02-20T13:57:17.673189 #28239] DEBUG -- :   SQL (11.3ms)  INSERT INTO "teas" ("created_at", "description", "name", "updated_at") 
+VALUES ($1, $2, $3, $4) RETURNING "id"  [["created_at", 2014-02-20 13:57:17 -0600], ["description", "awesome"], ["name", "cool"], ["updat
+ed_at", 2014-02-20 13:57:17 -0600]]
+D, [2014-02-20T13:57:17.677764 #28239] DEBUG -- :    (3.3ms)  COMMIT
+D, [2014-02-20T13:57:17.679647 #28239] DEBUG -- :    (0.4ms)  BEGIN
+D, [2014-02-20T13:57:17.712634 #28239] DEBUG -- :   SQL (1.3ms)  INSERT INTO "samples" ("drinker_id", "like", "tea_id") VALUES ($1, $2, $
+3) RETURNING "id"  [["drinker_id", 1], ["like", nil], ["tea_id", 3]]
+D, [2014-02-20T13:57:17.716343 #28239] DEBUG -- :    (3.1ms)  COMMIT
+D, [2014-02-20T13:57:17.719377 #28239] DEBUG -- :   Tea Load (0.8ms)  SELECT "teas".* FROM "teas" INNER JOIN "samples" ON "teas"."id" = "
+samples"."tea_id" WHERE "samples"."drinker_id" = 1
+ => [#<Tea id: 1, name: "Forever Nuts", description: "Walnut Tea", created_at: "2014-02-20 13:39:32", updated_at: "2014-02-20 13:39:32">,
+ #<Tea id: 2, name: "Chocolate Rocket", description: "chocolately black tea", created_at: "2014-02-20 13:39:32", updated_at: "2014-02-20 
+13:39:32">, #<Tea id: 3, name: "cool", description: "awesome", created_at: "2014-02-20 13:57:17", updated_at: "2014-02-20 13:57:17">] 
+1.9.3-p392 :005 > Drinker.first.tea_ids
+
+D, [2014-02-20T13:58:10.271305 #28239] DEBUG -- :   Drinker Load (1.0ms)  SELECT "drinkers".* FROM "drinkers" LIMIT 1
+D, [2014-02-20T13:58:10.274979 #28239] DEBUG -- :    (1.0ms)  SELECT "teas".id FROM "teas" INNER JOIN "samples" ON "teas"."id" = "samples
+"."tea_id" WHERE "samples"."drinker_id" = 1
+ => [1, 2, 3] 
+1.9.3-p392 :006 > Drinker.first.tea_ids = [2,3]
+D, [2014-02-20T13:58:36.131742 #28239] DEBUG -- :   Drinker Load (1.0ms)  SELECT "drinkers".* FROM "drinkers" LIMIT 1
+D, [2014-02-20T13:58:36.134439 #28239] DEBUG -- :   Tea Load (1.0ms)  SELECT "teas".* FROM "teas" WHERE "teas"."id" IN (2, 3)
+D, [2014-02-20T13:58:36.138358 #28239] DEBUG -- :   Tea Load (1.1ms)  SELECT "teas".* FROM "teas" INNER JOIN "samples" ON "teas"."id" = "
+samples"."tea_id" WHERE "samples"."drinker_id" = 1
+D, [2014-02-20T13:58:36.139933 #28239] DEBUG -- :    (0.5ms)  BEGIN
+D, [2014-02-20T13:58:36.147718 #28239] DEBUG -- :   SQL (0.9ms)  DELETE FROM "samples" WHERE "samples"."drinker_id" = 1 AND "samples"."te
+a_id" = 1
+D, [2014-02-20T13:58:36.153097 #28239] DEBUG -- :    (3.9ms)  COMMIT
+ => [2, 3] 
+1.9.3-p392 :007 > Drinker.first.teas = [Tea.find(1)]
+D, [2014-02-20T14:00:27.886287 #28239] DEBUG -- :   Drinker Load (1.0ms)  SELECT "drinkers".* FROM "drinkers" LIMIT 1
+D, [2014-02-20T14:00:27.889278 #28239] DEBUG -- :   Tea Load (1.4ms)  SELECT "teas".* FROM "teas" WHERE "teas"."id" = $1 LIMIT 1  [["id",
+ 1]]
+D, [2014-02-20T14:00:27.893320 #28239] DEBUG -- :   Tea Load (1.1ms)  SELECT "teas".* FROM "teas" INNER JOIN "samples" ON "teas"."id" = "
+samples"."tea_id" WHERE "samples"."drinker_id" = 1
+D, [2014-02-20T14:00:27.894402 #28239] DEBUG -- :    (0.4ms)  BEGIN
+D, [2014-02-20T14:00:27.897122 #28239] DEBUG -- :   SQL (0.9ms)  DELETE FROM "samples" WHERE "samples"."drinker_id" = 1 AND "samples"."te
+a_id" IN (2, 3)
+D, [2014-02-20T14:00:27.901788 #28239] DEBUG -- :   SQL (0.8ms)  INSERT INTO "samples" ("drinker_id", "like", "tea_id") VALUES ($1, $2, $
+3) RETURNING "id"  [["drinker_id", 1], ["like", nil], ["tea_id", 1]]
+D, [2014-02-20T14:00:27.906766 #28239] DEBUG -- :    (4.1ms)  COMMIT
+ => [#<Tea id: 1, name: "Forever Nuts", description: "Walnut Tea", created_at: "2014-02-20 13:39:32", updated_at: "2014-02-20 13:39:32">]
+ 
+1.9.3-p392 :008 > Drinker.first.teas
+D, [2014-02-20T14:00:36.701127 #28239] DEBUG -- :   Drinker Load (1.0ms)  SELECT "drinkers".* FROM "drinkers" LIMIT 1
+D, [2014-02-20T14:00:36.705146 #28239] DEBUG -- :   Tea Load (1.3ms)  SELECT "teas".* FROM "teas" INNER JOIN "samples" ON "teas"."id" = "
+samples"."tea_id" WHERE "samples"."drinker_id" = 1
+ => [#<Tea id: 1, name: "Forever Nuts", description: "Walnut Tea", created_at: "2014-02-20 13:39:32", updated_at: "2014-02-20 13:39:32">]
+ 
+1.9.3-p392 :009 > 
+
